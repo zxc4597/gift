@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT - 武汉最大的礼品卡交易平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --dark-blue: #1e40af;
+            --light-bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--light-bg);
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        section { padding: 5rem 0; }
+
+        /* 导航 */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed; width: 100%; top: 0; z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 0; }
+        .logo { font-size: 1.8rem; font-weight: 800; color: var(--primary-blue); text-decoration: none; }
+        .nav-links a { margin-left: 2rem; color: var(--text-gray); text-decoration: none; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--primary-blue); }
+        .nav-cta { background: var(--primary-blue); color: white; padding: 0.6rem 1.5rem; border-radius: 6px; margin-left: 2rem; }
+
+        /* 主横幅 */
+        .hero {
+            background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+            padding-top: 10rem; padding-bottom: 5rem; text-align: center;
+        }
+        .hero h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 1.5rem; line-height: 1.2; }
+        .hero p { font-size: 1.25rem; color: var(--text-gray); max-width: 700px; margin: 0 auto 2.5rem; }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; }
+        .btn-primary, .btn-secondary {
+            padding: 0.9rem 2rem; border-radius: 6px; font-weight: 600; text-decoration: none; display: inline-block; transition: all 0.3s;
+        }
+        .btn-primary { background: var(--primary-blue); color: white; }
+        .btn-primary:hover { background: var(--dark-blue); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2); }
+        .btn-secondary { background: transparent; border: 2px solid var(--primary-blue); color: var(--primary-blue); }
+        .btn-secondary:hover { background: rgba(37, 99, 235, 0.05); }
+
+        /* 数据统计 */
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem;
+            background: var(--card-bg); border-radius: 1rem; padding: 3rem; margin-top: -3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08); position: relative; z-index: 2;
+        }
+        .stat-item { text-align: center; }
+        .stat-number { font-size: 3rem; font-weight: 800; color: var(--primary-blue); display: block; line-height: 1; }
+        .stat-label { color: var(--text-gray); margin-top: 0.5rem; font-size: 1rem; }
+
+        /* ===== 核心：流畅自动滚动的品牌展示区 ===== */
+        .brands-section { background: var(--card-bg); overflow: hidden; position: relative; }
+        .section-title { text-align: center; margin-bottom: 3rem; }
+        .section-title h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .section-title p { color: var(--text-gray); max-width: 600px; margin: 0 auto; }
+
+        /* 滚动容器 */
+        .brand-scroll-container {
+            width: 100%;
+            overflow: hidden; /* 隐藏超出部分 */
+            position: relative;
+            padding: 1.5rem 0 3rem;
+        }
+        /* 滚动轨道 - 使用CSS动画实现平滑无限滚动 */
+        .brand-scroll-track {
+            display: flex;
+            gap: 1.5rem; /* 卡片间距 */
+            /* 关键：使用CSS动画实现滚动 */
+            animation: scrollBrands 40s linear infinite;
+            will-change: transform; /* 性能优化 */
+            padding: 0.5rem 0;
+        }
+        /* 暂停动画的类，用于鼠标悬停 */
+        .brand-scroll-track.paused {
+            animation-play-state: paused;
+        }
+        /* 定义滚动动画 */
+        @keyframes scrollBrands {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-170px * 6 - 1.5rem * 6)); /* 移动距离 = (卡片宽度+间距) * 卡片数量 */ }
+        }
+        /* 品牌卡片 - 修改为可点击弹出模态窗口 */
+        .brand-card {
+            flex: 0 0 auto;
+            width: 170px; /* 固定宽度 */
+            height: 170px;
+            background: var(--light-bg);
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none; /* 去掉下划线 */
+            color: inherit; /* 继承文字颜色 */
+            transition: all 0.3s ease;
+            padding: 1.5rem 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+            cursor: pointer;
+        }
+        .brand-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-blue);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.15);
+            background: white;
+        }
+        .brand-logo {
+            width: 70px; height: 70px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1rem;
+        }
+        .brand-logo img {
+            max-width: 100%; max-height: 100%;
+            filter: grayscale(30%); /* 微灰调，hover时变彩色 */
+            transition: filter 0.3s, transform 0.3s;
+        }
+        .brand-card:hover .brand-logo img {
+            filter: grayscale(0%);
+            transform: scale(1.05);
+        }
+        .brand-name {
+            font-weight: 600; color: var(--text-dark); font-size: 1rem;
+            text-align: center;
+        }
+        /* 左右渐变遮罩 */
+        .scroll-fade-left, .scroll-fade-right {
+            position: absolute; top: 0; height: 100%; width: 100px;
+            z-index: 2; pointer-events: none;
+        }
+        .scroll-fade-left { left: 0; background: linear-gradient(to right, white, transparent); }
+        .scroll-fade-right { right: 0; background: linear-gradient(to left, white, transparent); }
+
+        /* 最佳汇率卡片 */
+        .best-rates { background: linear-gradient(135deg, #1e3a8a 0%, var(--primary-blue) 100%); color: white; }
+        .rate-cards { display: flex; gap: 2rem; justify-content: center; margin-top: 3rem; }
+        .rate-card { background: rgba(255, 255, 255, 0.1); padding: 2rem; border-radius: 12px; text-align: center; flex: 1; max-width: 300px; }
+        .rate-percent { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .rate-name { font-size: 1.2rem; opacity: 0.9; }
+
+        /* 特性网格 */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem; }
+        .feature-card { background: var(--card-bg); padding: 2rem; border-radius: 12px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); }
+        .feature-icon { font-size: 2.5rem; color: var(--primary-blue); margin-bottom: 1rem; }
+
+        /* ===== 模态窗口样式 ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(90deg, #f8fafc, #ffffff);
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .modal-logo {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-gray);
+            transition: color 0.3s;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-modal:hover {
+            color: var(--primary-blue);
+            background: #f1f5f9;
+        }
+        
+        .modal-body {
+            padding: 2rem;
+        }
+        
+        .modal-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-section h3 {
+            color: var(--primary-blue);
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .modal-section p {
+            color: var(--text-gray);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .rate-info {
+            background: #f8fafc;
+            padding: 1.2rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+        
+        .rate-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .contact-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            color: white;
+        }
+        
+        .contact-btn.whatsapp {
+            background: #25D366;
+        }
+        
+        .contact-btn.telegram {
+            background: #0088cc;
+        }
+        
+        .contact-btn.wechat {
+            background: #07C160;
+        }
+        
+        .contact-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 客服联系区域 */
+        .support-section { text-align: center; padding: 40px 20px; background: #f8fafc; border-radius: 15px; margin: 40px 0; }
+        .support-section h3 { font-size: 1.8rem; margin-bottom: 1rem; color: var(--text-dark); }
+        .support-section > p { color: var(--text-gray); margin-bottom: 2rem; }
+        .support-staff { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-top: 30px; }
+        .staff-card { background: white; padding: 25px; border-radius: 12px; width: 180px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .staff-card h4 { color: var(--text-dark); margin-bottom: 0.5rem; }
+        .staff-card p { color: var(--text-gray); font-size: 0.9rem; margin-bottom: 1rem; }
+        .staff-contact-links { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        .staff-contact-btn {
+            padding: 10px 15px; border-radius: 6px; text-decoration: none; font-weight: 600;
+            display: block; transition: all 0.3s; color: white; text-align: center;
+        }
+        .staff-contact-btn.wechat { background-color: #07C160; }
+        .staff-contact-btn.qq { background-color: #12B7F5; }
+        .staff-contact-btn.telegram { background-color: #0088CC; }
+        .staff-contact-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
+
+        /* 页脚 */
+        footer { background: #0f172a; color: white; padding: 5rem 0 2rem; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; margin-bottom: 3rem; }
+        .footer-col h4 { font-size: 1.2rem; margin-bottom: 1.5rem; color: #e2e8f0; }
+        .footer-col p, .footer-col a { color: #94a3b8; margin-bottom: 0.8rem; display: block; text-decoration: none; transition: color 0.3s; }
+        .footer-col a:hover { color: var(--primary-blue); }
+        .copyright { text-align: center; padding-top: 2rem; border-top: 1px solid #334155; color: #64748b; font-size: 0.9rem; }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero-buttons { flex-direction: column; align-items: center; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .nav-links { display: none; }
+            .brand-card { width: 150px; height: 150px; }
+            .brand-logo { width: 60px; height: 60px; }
+            .modal { width: 95%; }
+            .modal-header { padding: 1.2rem 1.5rem; }
+            .modal-body { padding: 1.5rem; }
+        }
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .section-title h2 { font-size: 2rem; }
+            .rate-cards { flex-direction: column; align-items: center; }
+            .contact-info { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航 -->
+    <header>
+        <div class="container navbar">
+            <a href="#" class="logo">GFS GiftCard</a>
+            <div class="nav-links">
+                <a href="#home">首页</a>
+                <a href="#brands">支持品牌</a>
+                <a href="#rates">最佳汇率</a>
+                <a href="#why">为何选择我们</a>
+                <a href="#testimonials">用户评价</a>
+                <a href="#faq">常见问题</a>
+                <a href="#contact" class="nav-cta">开始交易</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主横幅 -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Welcome to GFS礼品卡交易中心</h1>
+            <p>武汉最大的礼品卡交易平台。以最佳汇率将您的礼品卡兑换成现金，享受闪电般的处理速度。</p>
+            <div class="hero-buttons">
+                <a href="#start" class="btn-primary">立即开始交易</a>
+                <a href="#rates" class="btn-secondary">查看实时汇率</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 数据统计 -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">10000+</span>
+                    <span class="stat-label">满意客户</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">50000+</span>
+                    <span class="stat-label">已交易卡券</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">5</span>
+                    <span class="stat-label">年行业经验</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">99%</span>
+                    <span class="stat-label">满意度</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 核心：流畅自动滚动的品牌展示区 ===== -->
+    <section class="brands-section" id="brands">
+        <div class="container">
+            <div class="section-title">
+                <h2>支持的礼品卡</h2>
+                <p>点击下方品牌图标查看详细信息，获取市场最佳汇率</p>
+            </div>
+            
+            <div class="brand-scroll-container">
+                <!-- 左渐变遮罩 -->
+                <div class="scroll-fade-left"></div>
+                <!-- 右渐变遮罩 -->
+                <div class="scroll-fade-right"></div>
+                
+                <!-- 滚动轨道 -->
+                <div class="brand-scroll-track" id="brandScrollTrack">
+                    <!-- 第一组品牌卡片 (6个) -->
+                    <div class="brand-card" data-brand="steam">
+                        <div class="brand-logo">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v5/icons/steam.svg" alt="Steam">
+                        </div>
+                        <div class="brand-name">Steam</div>
+                    </div>
+                    
+                    <div class="brand-card" data-brand="footlocker">
+                        <div class="brand-logo">
+                            <img src="https://media.4anet.com/media/24907/conversions/2-800.jpg" alt="Foot Locker">
+                        </div>
+                        <div class="brand-name">Foot Locker</div>
+                    </div>
+                    
+                    <div class="brand-card" data-brand="razer">
+                        <div class="brand-logo">
+                            <img src="https://ts1.tc.mm.bing.net/th/id/R-C.82673c878b40af83a3351db7cb12fc87?rik=UEGCtuzmQATLoQ&riu=http%3a%2f%2fimage.quwaifu.com%2fupload%2f20220912143416.jpg&ehk=ynyJUzvnkD5E3CFp8YaI29yjxIFXyxProQqeYWoJTjY%3d&risl=&pid=ImgRaw&r=0" alt="Razer Gold">
+                        </div>
+                        <div class="brand-name">RAZER GOLD</div>
+                    </div>
+                    
+                    <div class="brand-card" data-brand="itunes">
+                        <div class="brand-logo">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v5/icons/itunes.svg" alt="iTunes">
+                        </div>
+                        <div class="brand-name">iTunes</div>
+                    </div>
+                    
+                    <div class="brand-card" data-brand="xbox">
+                        <div class="brand-logo">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v5/icons/xbox.svg" alt="Xbox">
+                        </div>
+                        <div class="brand-name">Xbox</div>
+                    </div>
+                    
+                    <div class="brand-card" data-brand="apple">
+                        <div class="brand-logo">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v5/icons/apple.svg" alt="Apple">
+                        </div>
+                        <div class="brand-name">Apple</div>
+                    </div>
+                    
+                    <!-- 第二组品牌卡片 (重复第一组，用于无缝循环) -->
+                    <div class="brand-card" data-brand="steam">
+                        <div class="brand-logo">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v5/icons/steam.svg" alt="Steam">
+                        </div>
+                        <div class="brand-name">Steam</div>
+                    </div>
+                    
+                    <div class="brand-card" data-brand="footlocker">
+                        <div class="brand-logo">
+                            <img src="https://media.4anet.com/media/24907/conversions/2-800.jpg" alt="Foot Locker">
+                        </div>
+                        <div class="brand-name">Foot Locker</div>
+                    </div>
+                    
+                    <div class="brand-card" data-brand="razer">
+                        <div class="brand-logo">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v5/icons/razer.svg" alt="Razer Gold">
+                        </div>
+                        <div class="brand-name">RAZER GOLD</div>
+                    </div>
+                    
+                    <div class="brand-card" data-brand="itunes">
+                        <div class="brand-logo">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v5/icons/itunes.svg" alt="iTunes">
+                        </div>
+                        <div class="brand-name">iTunes</div>
+                    </div>
+                    
+                    <div class="brand-card" data-brand="xbox">
+                        <div class="brand-logo">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v5/icons/xbox.svg" alt="Xbox">
+                        </div>
+                        <div class="brand-name">Xbox</div>
+                    </div>
+                    
+                    <div class="brand-card" data-brand="apple">
+                        <div class="brand-logo">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v5/icons/apple.svg" alt="Apple">
+                        </div>
+                        <div class="brand-name">Apple</div>
+                    </div>
+                </div>
+            </div>
+            
+            <p style="text-align: center; color: var(--text-gray); margin-top: 1rem; font-size: 0.9rem;">
+                提示：鼠标悬停在品牌区可暂停滚动，点击任意品牌查看详细信息
+            </p>
+        </div>
+    </section>
+
+    <!-- 模态窗口 -->
+    <div class="modal-overlay" id="brandModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <img id="modalLogo" src="" alt="" class="modal-logo">
+                    <span id="modalBrandName">品牌名称</span>
+                </div>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h3><i class="fas fa-info-circle"></i> 品牌介绍</h3>
+                    <p id="modalDescription">这里是品牌介绍内容...</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-chart-line"></i> 兑换汇率</h3>
+                    <div class="rate-info">
+                        <div class="rate-value" id="modalRate">汇率信息</div>
+                        <p id="modalRateNote">汇率会根据市场情况进行调整，请以实时咨询为准。</p>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-exchange-alt"></i> 交易流程</h3>
+                    <p>1. 提交您要兑换的礼品卡信息</p>
+                    <p>2. 客服人员验证卡券信息</p>
+                    <p>3. 确认汇率并完成支付</p>
+                    <p>4. 交易完成，资金到账</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-headset"></i> 联系客服</h3>
+                    <p>点击下方按钮直接联系专属客服进行交易</p>
+                    <div class="contact-info">
+                        <a href="https://wellxb.com/siqian" class="contact-btn whatsapp" target="_blank">
+                            <i class="fab fa-whatsapp"></i> WhatsApp咨询
+                        </a>
+                        <a href="#" class="contact-btn telegram" target="_blank" id="telegramLink">
+                            <i class="fab fa-telegram"></i> Telegram咨询
+                        </a>
+                        <a href="#" class="contact-btn wechat" target="_blank" id="wechatLink">
+                            <i class="fab fa-weixin"></i> 微信咨询
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 客服联系区域 -->
+    <div class="support-section">
+        <h3>📞 联系我们的客服专员</h3>
+        <p>点击以下任一客服，通过您喜欢的软件快速咨询</p>
+        
+        <div class="support-staff">
+            <!-- 客服 1 -->
+            <div class="staff-card">
+                <h4>客服 - Anna</h4>
+                <p>Steam/Apple</p>
+                <div class="staff-contact-links">
+                    <a href="https://wellxb.com/siqian" class="staff-contact-btn wechat" target="_blank">
+                        <i class="fab fa-weixin"></i>WhatsApp
+                    </a>
+                    <a href="#your-telegram-link-2" class="staff-contact-btn telegram" target="_blank">
+                        <i class="fab fa-telegram"></i> Telegram
+                    </a>
+                </div>
+            </div>
+            <!-- 客服 2 -->
+            <div class="staff-card">
+                <h4>客服 - Ben</h4>
+                <p>苹果/Apple</p>
+                <div class="staff-contact-links">
+                    <a href="https://wellxb.com/siqian" class="staff-contact-btn wechat" target="_blank">
+                        <i class="fab fa-weixin"></i>WhatsApp
+                    </a>
+                    <a href="#your-telegram-link-2" class="staff-contact-btn telegram" target="_blank">
+                        <i class="fab fa-telegram"></i> Telegram
+                    </a>
+                </div>
+            </div>
+            <!-- 客服 3 -->
+            <div class="staff-card">
+                <h4>客服 - Charlie</h4>
+                <p>Xbox/Razer</p>
+                <div class="staff-contact-links">
+                    <a href="https://wellxb.com/siqian" class="staff-contact-btn wechat" target="_blank">
+                        <i class="fab fa-weixin"></i>WhatsApp
+                    </a>
+                    <a href="#your-telegram-link-2" class="staff-contact-btn telegram" target="_blank">
+                        <i class="fab fa-telegram"></i> Telegram
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 最佳汇率卡片 -->
+    <section class="best-rates" id="rates">
+        <div class="container">
+            <div class="section-title">
+                <h2>市场最佳汇率卡片</h2>
+                <p style="opacity: 0.9;">我们的高级定价算法确保您获得最高汇率</p>
+            </div>
+            <div class="rate-cards">
+                <div class="rate-card">
+                    <div class="rate-percent">1220/1</div>
+                    <div class="rate-name">Apple Gift Card</div>
+                </div>
+                <div class="rate-card">
+                    <div class="rate-percent">2.8%</div>
+                    <div class="rate-name">Foot Locker</div>
+                </div>
+                <div class="rate-card">
+                    <div class="rate-percent">111000</div>
+                    <div class="rate-name">STEAM</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 我们的服务部分 ===== -->
+<section class="services-section" id="services">
+    <div class="container">
+        <div class="section-title">
+            <h2>我们的服务</h2>
+            <p>满足您所有需求的全面礼品卡交易解决方案</p>
+        </div>
+        
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <h3>礼品卡交易</h3>
+                <p>用优惠价格礼品卡兑换或现金。我们接受所有主要礼品卡品牌。</p>
+                <div class="service-features">
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Steam、Apple、Xbox等主流品牌</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>实体卡与电子卡均可交易</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>多区域礼品卡支持</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-tags"></i>
+                </div>
+                <h3>最佳价格</h3>
+                <p>利用我们先进的定价算法，获取市场上最高的费率。</p>
+                <div class="service-features">
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>实时汇率监控系统</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>根据市场需求动态调整</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>价格匹配保证</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3>快速处理</h3>
+                <p>通过我们的自动处理系统，几分钟内收到您的付款。</p>
+                <div class="service-features">
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>自动化交易验证</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>多种支付方式可选</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>24小时即时到账</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="service-cta">
+            <a href="https://wellxb.com/siqian" class="btn-primary">
+                <i class="fas fa-comments"></i> 立即咨询我们的服务
+            </a>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* ===== 我们的服务部分样式 ===== */
+    .services-section {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        padding: 5rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .services-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%232563eb" fill-opacity="0.03" d="M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,138.7C672,128,768,160,864,170.7C960,181,1056,171,1152,149.3C1248,128,1344,96,1392,80L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+        background-repeat: no-repeat;
+        background-position: bottom;
+        background-size: cover;
+        z-index: 0;
+    }
+    
+    .services-section .container {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2.5rem;
+        margin-top: 3rem;
+    }
+    
+    .service-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #e2e8f0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .service-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-blue), var(--dark-blue));
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.5s ease;
+    }
+    
+    .service-card:hover::before {
+        transform: scaleX(1);
+    }
+    
+    .service-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    }
+    
+    .service-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        color: var(--primary-blue);
+        font-size: 2rem;
+        transition: all 0.3s ease;
+    }
+    
+    .service-card:hover .service-icon {
+        background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+        color: white;
+        transform: scale(1.1);
+    }
+    
+    .service-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: var(--text-dark);
+    }
+    
+    .service-card > p {
+        color: var(--text-gray);
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+        font-size: 1.05rem;
+    }
+    
+    .service-features {
+        margin-top: auto;
+        padding-top: 1.5rem;
+        border-top: 1px dashed #e2e8f0;
+    }
+    
+    .feature {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.8rem;
+        color: var(--text-gray);
+    }
+    
+    .feature i {
+        color: #10b981;
+        margin-right: 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    .feature span {
+        font-size: 0.95rem;
+    }
+    
+    .service-cta {
+        text-align: center;
+        margin-top: 4rem;
+    }
+    
+    .service-cta .btn-primary {
+        background: linear-gradient(90deg, var(--primary-blue), var(--dark-blue));
+        padding: 1rem 2.5rem;
+        font-size: 1.1rem;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+    }
+    
+    .service-cta .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
+    }
+    
+    /* 响应式调整 */
+    @media (max-width: 768px) {
+        .services-grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        
+        .service-card {
+            padding: 2rem;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .service-card {
+            padding: 1.5rem;
+        }
+        
+        .service-icon {
+            width: 70px;
+            height: 70px;
+            font-size: 1.8rem;
+        }
+    }
+</style>
+
+    <!-- 为何选择我们 -->
+    <section id="why">
+        <div class="container">
+            <div class="section-title">
+                <h2>为何选择 IT？</h2>
+                <p>我们提供武汉最可靠、高效的礼品卡交易服务</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                    <h3>闪电速度</h3>
+                    <p>几分钟内即可获得现金。我们的自动化系统即时处理交易。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>100% 安全</h3>
+                    <p>银行级安全确保您的交易安全，数据受保护。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-headset"></i></div>
+                    <h3>24/7 支持</h3>
+                    <p>我们的客服团队全天候为您解答任何问题。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>IT 礼品卡交易</h4>
+                    <p>武汉最大的礼品卡交易平台，致力于提供安全、快速、高价的兑换服务。</p>
+                </div>
+                <div class="footer-col">
+                    <h4>快速链接</h4>
+                    <a href="#home">首页</a>
+                    <a href="#brands">支持品牌</a>
+                    <a href="#rates">最佳汇率</a>
+                    <a href="#why">为何选择我们</a>
+                </div>
+                <div class="footer-col">
+                    <h4>联系我们</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> 武汉市</p>
+                    <p><i class="fas fa-phone"></i> 待定</p>
+                    <p><i class="fas fa-envelope"></i> support@itgiftcard.com</p>
+                    <p><i class="fas fa-clock"></i> 服务时间: 24/7</p>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; <span id="currentYear">2023</span> IT GiftCard Trading Platform. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 品牌数据 - 您可以修改这里的内容来自定义每个品牌的弹窗信息
+        const brandData = {
+            steam: {
+                name: "Steam",
+                logo: "https://cdn.jsdelivr.net/npm/simple-icons@v5/icons/steam.svg",
+                description: "Steam是全球最大的数字游戏发行平台，由Valve公司开发。您可以在Steam上购买数千款游戏、软件和硬件。Steam礼品卡是兑换Steam钱包余额的理想方式，可用于购买游戏、DLC、软件和硬件等。",
+                rate: "当前兑换汇率：111000",
+                rateNote: "汇率会根据Steam卡的面额和地区进行调整，具体请咨询客服。",
+                telegramLink: "https://t.me/your_steam_channel",
+                wechatLink: "https://wellxb.com/siqian"
+            },
+            footlocker: {
+                name: "Foot Locker",
+                logo: "https://media.4anet.com/media/24907/conversions/2-800.jpg",
+                description: "Foot Locker是全球领先的运动鞋和运动服装零售商。Foot Locker礼品卡可以在全球数千家Foot Locker门店使用，购买Nike、Adidas、Jordan等品牌的运动鞋和服装。",
+                rate: "当前兑换汇率：2.8%",
+                rateNote: "汇率根据卡的面额和有效期浮动，具体请咨询客服。",
+                telegramLink: "https://t.me/your_footlocker_channel",
+                wechatLink: "https://wellxb.com/siqian"
+            },
+            razer: {
+                name: "RAZER GOLD",
+                logo: "https://ts1.tc.mm.bing.net/th/id/R-C.82673c878b40af83a3351db7cb12fc87?rik=UEGCtuzmQATLoQ&riu=http%3a%2f%2fimage.quwaifu.com%2fupload%2f20220912143416.jpg&ehk=ynyJUzvnkD5E3CFp8YaI29yjxIFXyxProQqeYWoJTjY%3d&risl=&pid=ImgRaw&r=0",
+                description: "Razer Gold是全球领先的游戏支付服务，可在数千款游戏中使用。Razer Gold点数可用于购买游戏内物品、游戏时间、订阅服务等。支持全球众多热门游戏和平台。",
+                rate: "当前兑换汇率：请联系客服获取",
+                rateNote: "汇率根据Razer Gold卡的面额和地区浮动，请咨询客服获取实时报价。",
+                telegramLink: "https://t.me/your_razer_channel",
+                wechatLink: "https://wellxb.com/siqian"
+            },
+            itunes: {
+                name: "iTunes & App Store",
+                logo: "https://cdn.jsdelivr.net/npm/simple-icons@v5/icons/itunes.svg",
+                description: "iTunes礼品卡可用于在Apple生态系统内购买音乐、电影、电视节目、应用、游戏和iCloud存储等。支持App Store、iTunes Store、Apple Music、Apple TV+等所有Apple服务。",
+                rate: "当前兑换汇率：请联系客服获取",
+                rateNote: "汇率根据iTunes卡的面额、地区和类型浮动，请咨询客服获取实时报价。",
+                telegramLink: "https://t.me/your_itunes_channel",
+                wechatLink: "https://wellxb.com/siqian"
+            },
+            xbox: {
+                name: "Xbox",
+                logo: "https://cdn.jsdelivr.net/npm/simple-icons@v5/icons/xbox.svg",
+                description: "Xbox礼品卡是微软官方的数字礼品卡，可用于购买Xbox游戏、DLC、订阅服务（如Xbox Game Pass）、电影和应用。支持Xbox Series X/S、Xbox One和Windows平台。",
+                rate: "当前兑换汇率：请联系客服获取",
+                rateNote: "汇率根据Xbox卡的面额和地区浮动，请咨询客服获取实时报价。",
+                telegramLink: "https://t.me/your_xbox_channel",
+                wechatLink: "https://wellxb.com/siqian"
+            },
+            apple: {
+                name: "Apple Gift Card",
+                logo: "https://cdn.jsdelivr.net/npm/simple-icons@v5/icons/apple.svg",
+                description: "Apple礼品卡是苹果官方的多功能礼品卡，可在Apple Store零售店、apple.com、App Store、iTunes、Apple Music等平台使用。可用于购买iPhone、iPad、Mac等硬件产品，以及软件、订阅服务等。",
+                rate: "当前兑换汇率：1220/1",
+                rateNote: "汇率根据Apple卡的面额和地区浮动，具体请咨询客服获取实时报价。",
+                telegramLink: "https://t.me/your_apple_channel",
+                wechatLink: "https://wellxb.com/siqian"
+            }
+        };
+
+        // DOM元素
+        const modal = document.getElementById('brandModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const modalLogo = document.getElementById('modalLogo');
+        const modalBrandName = document.getElementById('modalBrandName');
+        const modalDescription = document.getElementById('modalDescription');
+        const modalRate = document.getElementById('modalRate');
+        const modalRateNote = document.getElementById('modalRateNote');
+        const telegramLink = document.getElementById('telegramLink');
+        const wechatLink = document.getElementById('wechatLink');
+        
+        // 获取所有品牌卡片
+        const brandCards = document.querySelectorAll('.brand-card');
+        
+        // 为每个品牌卡片添加点击事件
+        brandCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const brand = this.getAttribute('data-brand');
+                openModal(brand);
+            });
+        });
+        
+        // 打开模态窗口函数
+        function openModal(brand) {
+            const data = brandData[brand];
+            if (!data) return;
+            
+            // 设置模态窗口内容
+            modalLogo.src = data.logo;
+            modalLogo.alt = data.name;
+            modalBrandName.textContent = data.name;
+            modalDescription.textContent = data.description;
+            modalRate.textContent = data.rate;
+            modalRateNote.textContent = data.rateNote;
+            telegramLink.href = data.telegramLink;
+            wechatLink.href = data.wechatLink;
+            
+            // 显示模态窗口
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // 防止背景滚动
+        }
+        
+        // 关闭模态窗口
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = ''; // 恢复背景滚动
+        }
+        
+        // 关闭按钮事件
+        closeModalBtn.addEventListener('click', closeModal);
+        
+        // 点击模态窗口背景关闭
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+        
+        // ESC键关闭模态窗口
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+        
+        // 原有的滚动动画和悬停暂停功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrollTrack = document.getElementById('brandScrollTrack');
+            
+            if (scrollTrack) {
+                // 鼠标悬停暂停滚动
+                scrollTrack.addEventListener('mouseenter', function() {
+                    this.classList.add('paused');
+                });
+                // 鼠标离开恢复滚动
+                scrollTrack.addEventListener('mouseleave', function() {
+                    this.classList.remove('paused');
+                });
+            }
+            
+            // 更新页脚年份
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            // 平滑滚动导航（可选）
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href === '#' || href.includes('YOUR_')) return; // 跳过空链接和待替换链接
+                    
+                    e.preventDefault();
+                    const targetElement = document.querySelector(href);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
