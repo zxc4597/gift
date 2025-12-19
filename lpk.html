@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT礼品卡交易平台 - 武汉最大的礼品卡交易平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.8rem;
+            color: var(--primary-color) !important;
+        }
+        
+        .navbar-brand span {
+            color: var(--secondary-color);
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: white;
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,250.7C1248,256,1344,288,1392,304L1440,320L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .stats-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stats-card i {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+        
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            display: block;
+        }
+        
+        .stats-label {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            margin-bottom: 40px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 60px;
+            height: 4px;
+            background-color: var(--secondary-color);
+        }
+        
+        .card-item {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            height: 100%;
+            border: 1px solid #eee;
+        }
+        
+        .card-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+        }
+        
+        .card-name {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .feature-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            border-top: 4px solid var(--secondary-color);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+        
+        .team-member {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .team-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: var(--light-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 3rem;
+            color: var(--primary-color);
+        }
+        
+        .testimonial-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .transaction-details {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .transaction-item {
+            padding: 10px 15px;
+            background-color: var(--light-color);
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+        
+        .btn-outline-primary {
+            color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .carousel-container {
+            margin-bottom: 50px;
+        }
+        
+        .gift-card-carousel .carousel-item {
+            padding: 20px;
+        }
+        
+        .gift-card-item {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin: 0 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .gift-card-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .gift-card-logo {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+        }
+        
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 60px 0 20px;
+        }
+        
+        footer a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        footer a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            margin-top: 15px;
+        }
+        
+        .newsletter-form input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 5px 0 0 5px;
+            border: none;
+        }
+        
+        .newsletter-form button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+        
+        .copyright {
+            border-top: 1px solid #444;
+            padding-top: 20px;
+            margin-top: 40px;
+            text-align: center;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 60px 0;
+            }
+            
+            .stats-card {
+                padding: 15px;
+            }
+            
+            .stats-number {
+                font-size: 2rem;
+            }
+            
+            .feature-card, .testimonial-card {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+            
+            .newsletter-form {
+                flex-direction: column;
+            }
+            
+            .newsletter-form input, .newsletter-form button {
+                width: 100%;
+                border-radius: 5px;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <span>IT</span> Gift Cards
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">关于我们</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#services">服务</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#cards">礼品卡</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#team">团队</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#testimonials">客户评价</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">联系</a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <a class="btn btn-primary" href="tel:+8615391667580">📞 +86 15391667580</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 首页横幅 -->
+    <section id="home" class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 hero-content">
+                    <h1 class="display-4 fw-bold mb-4">欢迎来到 IT 礼品卡交易平台</h1>
+                    <p class="lead mb-4">武汉最大的礼品卡交易平台。以最佳汇率将您的礼品卡兑换成现金，闪电般快速处理。</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="#cards" class="btn btn-light btn-lg">开始交易</a>
+                        <a href="#about" class="btn btn-outline-light btn-lg">了解更多</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="row mt-5 mt-lg-0">
+                        <div class="col-6">
+                            <div class="stats-card">
+                                <i class="fas fa-users"></i>
+                                <span class="stats-number">1000+</span>
+                                <span class="stats-label">满意客户</span>
+                            </div>
+                            <div class="stats-card">
+                                <i class="fas fa-star"></i>
+                                <span class="stats-number">99%</span>
+                                <span class="stats-label">满意度</span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stats-card">
+                                <i class="fas fa-gift"></i>
+                                <span class="stats-number">50000+</span>
+                                <span class="stats-label">交易卡数</span>
+                            </div>
+                            <div class="stats-card">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span class="stats-number">5</span>
+                                <span class="stats-label">年经验</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 支持的礼品卡轮播 -->
+    <section id="cards" class="py-5">
+        <div class="container">
+            <h2 class="section-title text-center">支持的礼品卡</h2>
+            <p class="text-center mb-5">交易这些热门品牌的礼品卡，享受最佳汇率</p>
+            
+            <div class="carousel-container">
+                <div id="giftCardCarousel" class="carousel slide gift-card-carousel" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <!-- 第一组卡片 -->
+                        <div class="carousel-item active">
+                            <div class="row">
+                                <div class="col-md-3 col-6">
+                                    <div class="gift-card-item">
+                                        <div class="gift-card-logo">
+                                            <i class="fab fa-steam"></i>
+                                        </div>
+                                        <h5>STEAM</h5>
+                                        <p>Steam Card / eCode</p>
+                                        <a href="#contact" class="btn btn-outline-primary btn-sm">立即咨询</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-6">
+                                    <div class="gift-card-item">
+                                        <div class="gift-card-logo">
+                                            <i class="fab fa-xbox"></i>
+                                        </div>
+                                        <h5>XBOX</h5>
+                                        <p>Xbox Physical Card</p>
+                                        <a href="#contact" class="btn btn-outline-primary btn-sm">立即咨询</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-6">
+                                    <div class="gift-card-item">
+                                        <div class="gift-card-logo">
+                                            <i class="fab fa-apple"></i>
+                                        </div>
+                                        <h5>iTunes</h5>
+                                        <p>Apple Physical Card</p>
+                                        <a href="#contact" class="btn btn-outline-primary btn-sm">立即咨询</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-6">
+                                    <div class="gift-card-item">
+                                        <div class="gift-card-logo">
+                                            <i class="fas fa-gem"></i>
+                                        </div>
+                                        <h5>RAZER GOLD</h5>
+                                        <p>Razer Gold Card / code</p>
+                                        <a href="#contact" class="btn btn-outline-primary btn-sm">立即咨询</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 第二组卡片 -->
+                        <div class="carousel-item">
+                            <div class="row">
+                                <div class="col-md-3 col-6">
+                                    <div class="gift-card-item">
+                                        <div class="gift-card-logo">
+                                            <i class="fab fa-google-play"></i>
+                                        </div>
+                                        <h5>Google Play</h5>
+                                        <p>Google Play Gift Card</p>
+                                        <a href="#contact" class="btn btn-outline-primary btn-sm">立即咨询</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-6">
+                                    <div class="gift-card-item">
+                                        <div class="gift-card-logo">
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </div>
+                                        <h5>Foot Locker</h5>
+                                        <p>Foot Locker Gift Card</p>
+                                        <a href="#contact" class="btn btn-outline-primary btn-sm">立即咨询</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-6">
+                                    <div class="gift-card-item">
+                                        <div class="gift-card-logo">
+                                            <i class="fas fa-crown"></i>
+                                        </div>
+                                        <h5>GOLD</h5>
+                                        <p>Gold Gift Card</p>
+                                        <a href="#contact" class="btn btn-outline-primary btn-sm">立即咨询</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-6">
+                                    <div class="gift-card-item">
+                                        <div class="gift-card-logo">
+                                            <i class="fas fa-font"></i>
+                                        </div>
+                                        <h5>Font Tester</h5>
+                                        <p>Font Tester Card</p>
+                                        <a href="#contact" class="btn btn-outline-primary btn-sm">立即咨询</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#giftCardCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">上一页</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#giftCardCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">下一页</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 最佳汇率卡片 -->
+            <div class="row mt-5">
+                <div class="col-md-8 offset-md-2">
+                    <div class="card-item text-center p-4" style="background-color: #e8f4fc;">
+                        <h3 class="mb-4">最佳汇率卡片</h3>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="p-3">
+                                    <i class="fab fa-apple card-icon"></i>
+                                    <h5>Apple Gift Card</h5>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3">
+                                    <i class="fas fa-font card-icon"></i>
+                                    <h5>Font Tester</h5>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3">
+                                    <i class="fab fa-steam card-icon"></i>
+                                    <h5>STEAM</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h4 class="text-primary">最高可达 <span class="fw-bold">3.2%</span> 额外汇率</h4>
+                            <p class="mt-2">我们的高级定价算法确保您获得最高的礼品卡汇率。我们持续监控市场状况，提供有竞争力的汇率。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 为什么选择我们 -->
+    <section id="about" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title text-center">为什么选择 IT?</h2>
+            <p class="text-center mb-5">我们提供武汉最可靠、最高效的礼品卡交易服务</p>
+            
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h4>闪电般快速</h4>
+                        <p>几分钟内即可兑换现金。我们的自动化系统即时处理交易。</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>100% 安全</h4>
+                        <p>银行级安全确保您的交易安全，您的数据受到保护。</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h4>24/7 支持</h4>
+                        <p>我们的客服团队全天候为您服务，解答任何问题。</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4>最佳汇率</h4>
+                        <p>实时市场汇率，即时报价，无隐藏费用。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 我们的团队 -->
+    <section id="team" class="py-5">
+        <div class="container">
+            <h2 class="section-title text-center">我们的团队</h2>
+            <p class="text-center mb-5">认识我们的专业交易团队</p>
+            
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="team-member">
+                        <div class="team-avatar">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <h4>Trader_Ki</h4>
+                        <p class="text-muted">经理</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="team-member">
+                        <div class="team-avatar">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <h4>Trader_Xing</h4>
+                        <p class="text-muted">经理</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="team-member">
+                        <div class="team-avatar">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <h4>Trader_Tian</h4>
+                        <p class="text-muted">经理</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="team-member">
+                        <div class="team-avatar">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <h4>Trader_Zhe</h4>
+                        <p class="text-muted">经理</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 客户评价 -->
+    <section id="testimonials" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title text-center">客户评价</h2>
+            <p class="text-center mb-5">不要只听我们说 - 听听我们满意客户的声音</p>
+            
+            <div class="row mb-5">
+                <div class="col-lg-8">
+                    <div class="testimonial-card">
+                        <h5 class="mb-3">交易详情</h5>
+                        <p>来自我们客户的真实交易截图</p>
+                        
+                        <div class="transaction-details mt-4">
+                            <h6 class="mb-3">最新交易</h6>
+                            <div class="transaction-item">
+                                <strong>USDT 9000$</strong> - 已完成
+                            </div>
+                            <div class="transaction-item">
+                                <strong>DOIN</strong> - 处理中
+                            </div>
+                            <div class="transaction-item">
+                                <strong>ETH 交易</strong> - 已完成
+                            </div>
+                            <div class="transaction-item">
+                                <strong>MED MORE</strong> - 已完成
+                            </div>
+                            <div class="transaction-item">
+                                <strong>GOOD RATE</strong> - 高汇率交易
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="testimonial-card h-100">
+                        <h5 class="mb-3">交易 #6</h5>
+                        <p class="mb-4">自动播放交易详情</p>
+                        <div class="text-center">
+                            <i class="fas fa-play-circle" style="font-size: 5rem; color: var(--secondary-color);"></i>
+                            <p class="mt-3">点击查看实时交易流程</p>
+                            <button class="btn btn-primary mt-2">观看演示</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <p>"非常快速和高效的服务！我在几分钟内就把我的Steam礼品卡兑换成了现金。强烈推荐！"</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <div class="me-3">
+                                <i class="fas fa-user-circle fa-2x text-secondary"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">张先生</h6>
+                                <small class="text-muted">Steam 交易客户</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <p>"这是我用过的最好的礼品卡交易平台。汇率非常有竞争力，整个过程非常简单。"</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <div class="me-3">
+                                <i class="fas fa-user-circle fa-2x text-secondary"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">王女士</h6>
+                                <small class="text-muted">iTunes 交易客户</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <p>"24/7客户支持太棒了！我凌晨有问题，他们仍然迅速回复并帮助我解决了问题。"</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <div class="me-3">
+                                <i class="fas fa-user-circle fa-2x text-secondary"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">李先生</h6>
+                                <small class="text-muted">Xbox 交易客户</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 如何交易 -->
+    <section id="services" class="py-5">
+        <div class="container">
+            <h2 class="section-title text-center">如何在 IT 交易礼品卡?</h2>
+            
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="card-item p-4">
+                        <h4 class="mb-4">轻松获取折扣汇率和安全支付</h4>
+                        <div class="mb-4">
+                            <h5>价格如何？哪个平台最好？</h5>
+                            <p>我们的高级定价算法确保您获得市场最高汇率。我们持续监控市场状况，提供有竞争力的汇率。</p>
+                        </div>
+                        <div class="mb-4">
+                            <h5>可以交易哪些类型的卡？</h5>
+                            <p>我们支持各种品牌的礼品卡，包括Steam、Xbox、iTunes、Razer Gold等。查看上面的完整列表。</p>
+                        </div>
+                        <a href="#cards" class="btn btn-primary">查看所有支持的礼品卡</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card-item p-4 mt-4 mt-lg-0">
+                        <h4 class="mb-4">我们提供的服务</h4>
+                        <p class="mb-3">全面的礼品卡交易解决方案，满足您的所有需求</p>
+                        
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-check-circle text-success me-3"></i>
+                            <div>
+                                <h5 class="mb-0">礼品卡交易</h5>
+                                <p class="mb-0">最佳汇率，快速处理</p>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-check-circle text-success me-3"></i>
+                            <div>
+                                <h5 class="mb-0">24/7 在线服务</h5>
+                                <p class="mb-0">全天候支持，随时交易</p>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-check-circle text-success me-3"></i>
+                            <div>
+                                <h5 class="mb-0">安全支付</h5>
+                                <p class="mb-0">银行级安全，保障资金安全</p>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-check-circle text-success me-3"></i>
+                            <div>
+                                <h5 class="mb-0">实时市场汇率</h5>
+                                <p class="mb-0">即时报价，无隐藏费用</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系和页脚 -->
+    <footer id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h4 class="mb-4">IT Gift Cards</h4>
+                    <p class="mb-4">武汉最大的礼品卡交易平台。以最佳汇率将您的礼品卡兑换成现金，闪电般快速处理。</p>
+                    <a href="#home" class="btn btn-primary mb-3">立即交易</a>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                    <h5 class="mb-4">快速链接</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#about">关于我们</a></li>
+                        <li class="mb-2"><a href="#services">服务</a></li>
+                        <li class="mb-2"><a href="#team">团队</a></li>
+                        <li class="mb-2"><a href="#testimonials">客户评价</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="mb-4">有用的链接</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#cards">iTunes 礼品卡</a></li>
+                        <li class="mb-2"><a href="#cards">Steam 钱包</a></li>
+                        <li class="mb-2"><a href="#cards">Xbox 礼品卡</a></li>
+                        <li class="mb-2"><a href="#cards">Razer Gold 卡</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h5 class="mb-4">联系我们</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <i class="fas fa-phone me-2"></i>
+                            <a href="tel:+8615391667580">+86 15391667580</a>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-phone me-2"></i>
+                            <span>即将推出</span>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-envelope me-2"></i>
+                            <a href="mailto:info@itgiftcards.com">info@itgiftcards.com</a>
+                        </li>
+                    </ul>
+                    
+                    <h6 class="mt-4 mb-3">订阅新闻通讯</h6>
+                    <div class="newsletter-form">
+                        <input type="email" placeholder="您的邮箱地址" class="form-control">
+                        <button type="submit">订阅</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 IT Gift Cards 交易平台。保留所有权利。</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 自动轮播控制
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化轮播
+            const myCarousel = document.querySelector('#giftCardCarousel');
+            const carousel = new bootstrap.Carousel(myCarousel, {
+                interval: 3000, // 3秒自动切换
+                wrap: true
+            });
+            
+            // 平滑滚动到锚点
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if(targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // 电话号码点击事件
+            document.querySelectorAll('a[href^="tel:"]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    alert('正在拨打: ' + this.textContent);
+                });
+            });
+            
+            // 交易演示按钮
+            document.querySelector('.btn-primary.mt-2').addEventListener('click', function() {
+                alert('交易演示功能即将推出！');
+            });
+            
+            // 新闻通讯订阅
+            document.querySelector('.newsletter-form button').addEventListener('click', function() {
+                const emailInput = document.querySelector('.newsletter-form input');
+                if(emailInput.value && emailInput.value.includes('@')) {
+                    alert('感谢订阅！我们将向 ' + emailInput.value + ' 发送最新资讯。');
+                    emailInput.value = '';
+                } else {
+                    alert('请输入有效的邮箱地址');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
